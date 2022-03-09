@@ -1,24 +1,23 @@
-<script context="module">
+<script lang="ts">
+	import Auth from '$lib/components/Auth.svelte';
 	import { browser } from '$app/env';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { auth } from '$lib/services/firebase';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let noUser = false;
-	if (browser) {
+	onMount(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
 				console.log('user found');
 				const uid = user.uid;
 				goto('/chat');
+			} else {
+				noUser = true;
 			}
 		});
-		noUser = true;
-	}
-</script>
-
-<script lang="ts">
-	import Auth from '$lib/components/Auth.svelte';
+	});
 </script>
 
 {#if noUser}
